@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TechVault — Mobile Accessories Trading</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  :root {
+    --bg: #030a1be0; 
+    --surface: rgba(15, 23, 42, 0.6);
+    --card: rgba(9, 17, 31, 0.73);
+    --border: rgba(99, 102, 241, 0.2);
+    --accent: #6366f1;
+    --accent-glow: rgba(99, 102, 241, 0.5);
+    --cyan: #06b6d4;
+    --pink: #ec4899;
+    --green: #10b981;
+    --orange: #f59e0b;
+    --red: #ef4444;
+    --text: #f1f5f9;
+    --muted: #64748b;
+    --font-main: 'Space Grotesk', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-main);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse at 20% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 50%, rgba(236, 72, 153, 0.05) 0%, transparent 70%);
+    z-index: -2;
+    animation: meshMove 20s ease-in-out infinite;
+  }
+
+  @keyframes meshMove {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -30px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.9); }
+  }
+
+  .particles { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+  .particle { position: absolute; width: 4px; height: 4px; background: var(--accent); border-radius: 50%; opacity: 0.3; animation: float 15s infinite; }
+  .particle:nth-child(1) { left: 10%; top: 20%; animation-delay: 0s; }
+  .particle:nth-child(2) { left: 90%; top: 80%; animation-delay: 2s; background: var(--cyan); }
+  .particle:nth-child(3) { left: 50%; top: 10%; animation-delay: 4s; background: var(--pink); }
+  .particle:nth-child(4) { left: 80%; top: 40%; animation-delay: 6s; }
+  .particle:nth-child(5) { left: 20%; top: 70%; animation-delay: 8s; background: var(--cyan); }
+  @keyframes float {
+    0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
+    50% { transform: translateY(-100px) translateX(50px); opacity: 0.6; }
+  }
+
+  header {
+    padding: 24px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    background: rgba(10, 14, 26, 0.8);
+    backdrop-filter: blur(20px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .brand { display: flex; align-items: center; gap: 16px; }
+  .logo-icon { width: 48px; height: 48px; background: linear-gradient(135deg, var(--accent), var(--cyan)); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 8px 32px var(--accent-glow); }
+  .logo-text { font-size: 1.8rem; font-weight: 700; letter-spacing: -1px; background: linear-gradient(135deg, var(--text), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .logo-text span { font-weight: 300; opacity: 0.7; }
+  .status-badge { display: flex; align-items: center; gap: 8px; padding: 10px 20px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 50px; font-family: var(--font-mono); font-size: 0.75rem; color: var(--green); }
+  .status-dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.2); } }
+
+  main { max-width: 1600px; margin: 0 auto; padding: 40px; display: grid; grid-template-columns: 1fr 400px; gap: 32px; }
+
+  .glass-panel { background: var(--card); border: 1px solid var(--border); border-radius: 24px; padding: 32px; backdrop-filter: blur(20px); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); }
+  .section-title { font-size: 1.3rem; font-weight: 600; margin-bottom: 24px; display: flex; align-items: center; gap: 12px; }
+  .section-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--accent), var(--pink)); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+
+  .bento-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+
+  .product-card { background: linear-gradient(145deg, rgba(30, 41, 59, 0.6), rgba(15, 23, 42, 0.4)); border: 1px solid var(--border); border-radius: 20px; padding: 24px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; }
+  .product-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, transparent, rgba(99, 102, 241, 0.1), transparent); opacity: 0; transition: opacity 0.3s; }
+  .product-card:hover { transform: translateY(-4px) scale(1.02); border-color: var(--accent); box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2); }
+  .product-card:hover::before { opacity: 1; }
+  .product-card.selected { border-color: var(--accent); background: linear-gradient(145deg, rgba(99, 102, 241, 0.2), rgba(30, 41, 59, 0.6)); box-shadow: 0 0 30px var(--accent-glow); }
+  .product-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+  .product-icon { width: 56px; height: 56px; background: linear-gradient(135deg, var(--surface), var(--card)); border: 1px solid var(--border); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 28px; }
+  .stock-indicator { padding: 6px 12px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 20px; font-family: var(--font-mono); font-size: 0.7rem; color: var(--green); }
+  .product-name { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; line-height: 1.3; }
+  .product-sku { font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); margin-bottom: 16px; }
+  .product-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 16px; border-top: 1px solid var(--border); }
+  .price-tag { font-size: 1.4rem; font-weight: 700; color: var(--cyan); }
+  .price-tag span { font-size: 0.9rem; color: var(--muted); font-weight: 400; }
+  .stock-bar { width: 100%; height: 6px; background: rgba(99, 102, 241, 0.1); border-radius: 3px; margin-top: 12px; overflow: hidden; }
+  .stock-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--cyan)); border-radius: 3px; transition: width 0.5s ease; }
+
+  /* Product Action Buttons */
+  .product-actions { display: flex; gap: 8px; margin-top: 12px; }
+  .btn-edit-inv { flex: 1; padding: 8px; background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.4); border-radius: 10px; color: var(--accent); font-family: var(--font-mono); font-size: 0.72rem; cursor: pointer; transition: all 0.2s; }
+  .btn-del-inv  { flex: 1; padding: 8px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 10px; color: var(--red); font-family: var(--font-mono); font-size: 0.72rem; cursor: pointer; transition: all 0.2s; }
+  .btn-edit-inv:hover { background: rgba(99, 102, 241, 0.3); }
+  .btn-del-inv:hover  { background: rgba(239, 68, 68, 0.25); }
+
+  /* Order Panel */
+  .order-panel { position: sticky; top: 120px; height: fit-content; }
+  .form-group { margin-bottom: 24px; }
+  .form-label { display: block; font-size: 0.8rem; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+  .form-select, .form-input { width: 100%; padding: 16px 20px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border); border-radius: 16px; color: var(--text); font-family: var(--font-main); font-size: 1rem; outline: none; transition: all 0.3s; }
+  .form-select:focus, .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1); }
+
+  .summary-card { background: linear-gradient(145deg, rgba(99, 102, 241, 0.1), rgba(6, 182, 212, 0.05)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 24px; }
+  .summary-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(99, 102, 241, 0.1); }
+  .summary-row:last-child { border-bottom: none; }
+  .summary-label { color: var(--muted); font-size: 0.95rem; }
+  .summary-value { font-weight: 600; color: var(--text); }
+  .summary-total { margin-top: 16px; padding-top: 16px; border-top: 2px solid var(--accent); }
+  .summary-total .summary-value { font-size: 1.5rem; color: var(--cyan); }
+
+  .btn-primary { width: 100%; padding: 18px; background: linear-gradient(135deg, var(--accent), var(--cyan)); border: none; border-radius: 16px; color: white; font-family: var(--font-main); font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 8px 32px var(--accent-glow); }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(99, 102, 241, 0.4); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* Timeline */
+  .timeline { display: flex; flex-direction: column; gap: 16px; }
+  .timeline-item { background: linear-gradient(145deg, rgba(30, 41, 59, 0.4), rgba(15, 23, 42, 0.3)); border: 1px solid var(--border); border-radius: 16px; padding: 20px; display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: center; transition: all 0.3s; }
+  .timeline-item:hover { border-color: var(--accent); transform: translateX(4px); }
+  .timeline-icon { width: 48px; height: 48px; background: linear-gradient(135deg, var(--accent), var(--pink)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+  .timeline-content h4 { font-size: 1rem; margin-bottom: 4px; }
+  .timeline-content p { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); }
+  .timeline-amount { text-align: right; }
+  .timeline-amount .amount { font-size: 1.2rem; font-weight: 700; color: var(--cyan); }
+  .timeline-amount .txn { font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent); margin-top: 4px; }
+
+  /* Order action buttons */
+  .order-actions { display: flex; gap: 8px; margin-top: 10px; }
+  .btn-update-order { padding: 7px 14px; background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 10px; color: var(--orange); font-family: var(--font-mono); font-size: 0.72rem; cursor: pointer; transition: all 0.2s; }
+  .btn-delete-order { padding: 7px 14px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 10px; color: var(--red); font-family: var(--font-mono); font-size: 0.72rem; cursor: pointer; transition: all 0.2s; }
+  .btn-update-order:hover { background: rgba(245, 158, 11, 0.28); }
+  .btn-delete-order:hover { background: rgba(239, 68, 68, 0.25); }
+
+  /* Modal Overlay */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 500; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+  .modal-overlay.active { opacity: 1; pointer-events: all; }
+  .modal { background: rgba(9, 17, 31, 0.98); border: 1px solid var(--border); border-radius: 24px; padding: 36px; width: 440px; max-width: 95vw; box-shadow: 0 32px 80px rgba(0,0,0,0.6); transform: scale(0.9); transition: transform 0.3s; }
+  .modal-overlay.active .modal { transform: scale(1); }
+  .modal h3 { font-size: 1.3rem; font-weight: 700; margin-bottom: 24px; background: linear-gradient(135deg, var(--text), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .modal .form-group { margin-bottom: 18px; }
+  .modal .form-label { font-size: 0.78rem; }
+  .modal .form-input { padding: 12px 16px; border-radius: 12px; }
+  .modal-actions { display: flex; gap: 12px; margin-top: 24px; }
+  .btn-confirm { flex: 1; padding: 14px; background: linear-gradient(135deg, var(--accent), var(--cyan)); border: none; border-radius: 12px; color: white; font-family: var(--font-main); font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: all 0.2s; }
+  .btn-cancel  { flex: 1; padding: 14px; background: transparent; border: 1px solid var(--border); border-radius: 12px; color: var(--muted); font-family: var(--font-main); font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: all 0.2s; }
+  .btn-confirm:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-cancel:hover  { border-color: var(--red); color: var(--red); }
+
+  /* Status badge colors */
+  .status-completed { color: var(--green); }
+  .status-cancelled { color: var(--red); }
+  .status-pending   { color: var(--orange); }
+
+  /* Toast */
+  #toast { position: fixed; bottom: 32px; right: 32px; padding: 20px 28px; border-radius: 16px; font-family: var(--font-main); font-weight: 500; transform: translateY(100px); opacity: 0; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 1000; backdrop-filter: blur(20px); }
+  #toast.show { transform: translateY(0); opacity: 1; }
+  #toast.success { background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: var(--green); }
+  #toast.error   { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #ef4444; }
+  #toast.warning { background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.4); color: var(--orange); }
+
+  .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
+  .empty-state-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
+  .btn-refresh { padding: 10px 20px; background: transparent; border: 1px solid var(--border); border-radius: 12px; color: var(--muted); font-family: var(--font-mono); font-size: 0.8rem; cursor: pointer; transition: all 0.3s; margin-left: auto; }
+  .btn-refresh:hover { border-color: var(--accent); color: var(--accent); background: rgba(99, 102, 241, 0.1); }
+  .spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle; margin-right: 10px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 1200px) { main { grid-template-columns: 1fr; } .order-panel { position: static; } }
+  @media (max-width: 768px) { header { padding: 16px 24px; } main { padding: 24px; } .bento-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="particles">
+  <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+  <div class="particle"></div><div class="particle"></div>
+</div>
+
+<header>
+  <div class="brand">
+    <div class="logo-icon">📱</div>
+    <div class="logo-text">Tech<span>Vault</span></div>
+  </div>
+  <div class="status-badge">
+    <span class="status-dot"></span>
+    <span>MySQL CONNECTED</span>
+  </div>
+</header>
+
+<main>
+  <div class="main-content">
+    <!-- Products Section -->
+    <div class="glass-panel" style="margin-bottom: 32px;">
+      <div class="section-title">
+        <div class="section-icon">📦</div>
+        <span>Product Catalog</span>
+        <button class="btn-refresh" onclick="loadInventory()">↻ Refresh</button>
+      </div>
+      <div id="inventory-grid" class="bento-grid">
+        <div class="empty-state">
+          <div class="empty-state-icon">⏳</div>
+          <p>Loading products...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- History Section -->
+    <div class="glass-panel">
+      <div class="section-title">
+        <div class="section-icon" style="background: linear-gradient(135deg, var(--pink), var(--orange));">📋</div>
+        <span>Transaction History</span>
+        <button class="btn-refresh" onclick="loadHistory()">↻ Refresh</button>
+      </div>
+      <div id="history-list" class="timeline">
+        <div class="empty-state">
+          <div class="empty-state-icon">📭</div>
+          <p>No transactions yet</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Order Panel -->
+  <div class="glass-panel order-panel">
+    <div class="section-title">
+      <div class="section-icon" style="background: linear-gradient(135deg, var(--cyan), var(--green));">🛒</div>
+      <span>New Order</span>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Select Product</label>
+      <select id="product-select" class="form-select" onchange="updateSummary()">
+        <option value="">Choose a product...</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Quantity</label>
+      <input type="number" id="quantity-input" class="form-input" min="1" value="10" oninput="updateSummary()">
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-row"><span class="summary-label">Product</span><span class="summary-value" id="sum-product">—</span></div>
+      <div class="summary-row"><span class="summary-label">Unit Price</span><span class="summary-value" id="sum-price">—</span></div>
+      <div class="summary-row"><span class="summary-label">Quantity</span><span class="summary-value" id="sum-qty">—</span></div>
+      <div class="summary-row summary-total"><span class="summary-label">Total</span><span class="summary-value" id="sum-total">—</span></div>
+    </div>
+
+    <button class="btn-primary" id="order-btn" onclick="placeOrder()">Complete Order</button>
+  </div>
+</main>
+
+<!-- ── Edit Inventory Modal ──────────────────────────────────── -->
+<div class="modal-overlay" id="modal-edit-inv">
+  <div class="modal">
+    <h3>✏️ Edit Inventory Item</h3>
+    <input type="hidden" id="edit-inv-code">
+    <div class="form-group">
+      <label class="form-label">Product Name</label>
+      <input type="text" id="edit-inv-name" class="form-input" placeholder="Product name">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Price ($)</label>
+      <input type="number" id="edit-inv-price" class="form-input" step="0.01" min="0" placeholder="0.00">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Stock Quantity</label>
+      <input type="number" id="edit-inv-stock" class="form-input" min="0" placeholder="0">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('modal-edit-inv')">Cancel</button>
+      <button class="btn-confirm" onclick="confirmEditInventory()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Delete Inventory Modal ─────────────────────────────────── -->
+<div class="modal-overlay" id="modal-del-inv">
+  <div class="modal">
+    <h3>🗑️ Delete Inventory Item</h3>
+    <input type="hidden" id="del-inv-code">
+    <p style="color:var(--muted); margin-bottom:20px; line-height:1.6;">
+      Are you sure you want to delete <strong id="del-inv-name" style="color:var(--text)"></strong>?
+      This action cannot be undone.
+    </p>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('modal-del-inv')">Cancel</button>
+      <button class="btn-confirm" style="background:linear-gradient(135deg, var(--red), #b91c1c);" onclick="confirmDeleteInventory()">Delete Item</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Update Order Modal ─────────────────────────────────────── -->
+<div class="modal-overlay" id="modal-update-order">
+  <div class="modal">
+    <h3>🔄 Update Order</h3>
+    <input type="hidden" id="upd-order-txn">
+    <div class="form-group">
+      <label class="form-label">Status</label>
+      <select id="upd-order-status" class="form-select">
+        <option value="Completed">Completed</option>
+        <option value="Pending">Pending</option>
+        <option value="Cancelled">Cancelled</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('modal-update-order')">Cancel</button>
+      <button class="btn-confirm" onclick="confirmUpdateOrder()">Update Order</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Delete Order Modal ─────────────────────────────────────── -->
+<div class="modal-overlay" id="modal-del-order">
+  <div class="modal">
+    <h3>🗑️ Delete Order Record</h3>
+    <input type="hidden" id="del-order-txn">
+    <p style="color:var(--muted); margin-bottom:20px; line-height:1.6;">
+      Delete transaction <strong id="del-order-txn-label" style="color:var(--cyan); font-family:var(--font-mono);"></strong>?
+      This will permanently remove the order from the database.
+    </p>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('modal-del-order')">Cancel</button>
+      <button class="btn-confirm" style="background:linear-gradient(135deg, var(--red), #b91c1c);" onclick="confirmDeleteOrder()">Delete Order</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+  const ICONS = { CASE: '📱', CHARGER: '🔌', CABLE: '🔗', EARBUDS: '🎧', GLASS: '🛡️', POWER: '🔋', HOLDER: '📲', ADAPTER: '🔌' };
+  let inventoryData = {};
+  const BASE_ORDER = 'http://127.0.0.1:5000';
+  const BASE_INV   = 'http://127.0.0.1:5001';
+
+  // ── Utilities ──────────────────────────────────────────────────
+  function parseXML(text) { return new DOMParser().parseFromString(text, 'application/xml'); }
+  function getText(el, tag) { const n = el.querySelector(tag); return n ? n.textContent : ''; }
+
+  function showToast(msg, type = 'success') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = `show ${type}`;
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => { t.className = ''; }, 4000);
+  }
+
+  function openModal(id)  { document.getElementById(id).classList.add('active'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+  // ── Inventory ──────────────────────────────────────────────────
+  async function loadInventory() {
+    try {
+      const res  = await fetch(`${BASE_INV}/inventory`);
+      const text = await res.text();
+      const doc  = parseXML(text);
+      const items = doc.querySelectorAll('Item');
+
+      const grid   = document.getElementById('inventory-grid');
+      const select = document.getElementById('product-select');
+      const prev   = select.value;
+      grid.innerHTML = '';
+      select.innerHTML = '<option value="">Choose a product...</option>';
+
+      items.forEach(item => {
+        const code     = getText(item, 'Code');
+        const name     = getText(item, 'Name');
+        const stock    = parseInt(getText(item, 'Stock'));
+        const price    = parseFloat(getText(item, 'Price'));
+        const category = getText(item, 'Category');
+
+        if (!inventoryData[code]) inventoryData[code] = { maxStock: stock };
+        inventoryData[code] = { ...inventoryData[code], name, stock, price, category };
+        const pct = Math.min(100, (stock / (inventoryData[code].maxStock || 1000)) * 100);
+
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.id = `card-${code}`;
+        card.onclick = () => selectCard(code);
+        card.innerHTML = `
+          <div class="product-header">
+            <div class="product-icon">${ICONS[category] || '📦'}</div>
+            <div class="stock-indicator">${stock} in stock</div>
+          </div>
+          <div class="product-name">${name}</div>
+          <div class="product-sku">SKU: ${code}</div>
+          <div class="product-footer">
+            <div class="price-tag">$${price.toFixed(2)}<span>/unit</span></div>
+          </div>
+          <div class="stock-bar"><div class="stock-fill" style="width:${pct}%"></div></div>
+          <div class="product-actions" onclick="event.stopPropagation()">
+            <button class="btn-edit-inv" onclick="openEditInventory('${code}')">✏️ Edit</button>
+            <button class="btn-del-inv"  onclick="openDeleteInventory('${code}', '${name}')">🗑️ Delete</button>
+          </div>
+        `;
+        grid.appendChild(card);
+
+        const opt = document.createElement('option');
+        opt.value = code;
+        opt.textContent = `${name} — $${price.toFixed(2)}`;
+        select.appendChild(opt);
+      });
+
+      if (prev) { select.value = prev; updateSummary(); }
+    } catch (e) {
+      document.getElementById('inventory-grid').innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-icon">⚠️</div>
+          <p>Could not reach Inventory Service<br><small>Port 5001</small></p>
+        </div>`;
+    }
+  }
+
+  function selectCard(code) {
+    document.querySelectorAll('.product-card').forEach(c => c.classList.remove('selected'));
+    const card = document.getElementById(`card-${code}`);
+    if (card) card.classList.add('selected');
+    document.getElementById('product-select').value = code;
+    updateSummary();
+  }
+
+  function updateSummary() {
+    const code = document.getElementById('product-select').value;
+    const qty  = parseInt(document.getElementById('quantity-input').value) || 0;
+    document.querySelectorAll('.product-card').forEach(c => c.classList.remove('selected'));
+    if (code) { const c = document.getElementById(`card-${code}`); if (c) c.classList.add('selected'); }
+    if (code && inventoryData[code]) {
+      const d = inventoryData[code];
+      document.getElementById('sum-product').textContent = d.name;
+      document.getElementById('sum-price').textContent   = `$${d.price.toFixed(2)}`;
+      document.getElementById('sum-qty').textContent     = `${qty} units`;
+      document.getElementById('sum-total').textContent   = `$${(d.price * qty).toLocaleString('en-US', {minimumFractionDigits:2})}`;
+    } else {
+      ['sum-product','sum-price','sum-qty','sum-total'].forEach(id => document.getElementById(id).textContent = '—');
+    }
+  }
+
+  // ── Edit Inventory ──────────────────────────────────────────────
+  function openEditInventory(code) {
+    const d = inventoryData[code];
+    if (!d) return;
+    document.getElementById('edit-inv-code').value  = code;
+    document.getElementById('edit-inv-name').value  = d.name;
+    document.getElementById('edit-inv-price').value = d.price;
+    document.getElementById('edit-inv-stock').value = d.stock;
+    openModal('modal-edit-inv');
+  }
+
+  async function confirmEditInventory() {
+    const code  = document.getElementById('edit-inv-code').value;
+    const name  = document.getElementById('edit-inv-name').value.trim();
+    const price = document.getElementById('edit-inv-price').value;
+    const stock = document.getElementById('edit-inv-stock').value;
+
+    if (!name || !price || !stock) return showToast('Fill in all fields', 'error');
+
+    const xml = `<Item><Code>${code}</Code><Name>${name}</Name><Price>${price}</Price><Stock>${stock}</Stock></Item>`;
+    try {
+      const res  = await fetch(`${BASE_INV}/edit_item`, { method: 'POST', headers: {'Content-Type':'application/xml'}, body: xml });
+      const text = await res.text();
+      const doc  = parseXML(text);
+      if (getText(doc, 'Status') === 'Success') {
+        showToast(`✓ ${getText(doc, 'Message')}`, 'success');
+        closeModal('modal-edit-inv');
+        await loadInventory();
+      } else {
+        showToast(`✗ ${getText(doc, 'Message')}`, 'error');
+      }
+    } catch (e) { showToast('⚠ Could not reach Inventory Service', 'error'); }
+  }
+
+  // ── Delete Inventory ────────────────────────────────────────────
+  function openDeleteInventory(code, name) {
+    document.getElementById('del-inv-code').value = code;
+    document.getElementById('del-inv-name').textContent = name;
+    openModal('modal-del-inv');
+  }
+
+  async function confirmDeleteInventory() {
+    const code = document.getElementById('del-inv-code').value;
+    const xml  = `<Item><Code>${code}</Code></Item>`;
+    try {
+      const res  = await fetch(`${BASE_INV}/delete_item`, { method: 'POST', headers: {'Content-Type':'application/xml'}, body: xml });
+      const text = await res.text();
+      const doc  = parseXML(text);
+      if (getText(doc, 'Status') === 'Success') {
+        showToast(`✓ ${getText(doc, 'Message')}`, 'success');
+        closeModal('modal-del-inv');
+        await loadInventory();
+      } else {
+        showToast(`✗ ${getText(doc, 'Message')}`, 'error');
+      }
+    } catch (e) { showToast('⚠ Could not reach Inventory Service', 'error'); }
+  }
+
+  // ── Place Order ─────────────────────────────────────────────────
+  async function placeOrder() {
+    const code = document.getElementById('product-select').value;
+    const qty  = parseInt(document.getElementById('quantity-input').value);
+    if (!code) return showToast('Please select a product', 'error');
+    if (!qty || qty < 1) return showToast('Enter valid quantity', 'error');
+
+    const btn = document.getElementById('order-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Processing...';
+
+    const xml = `<Order><ProductCode>${code}</ProductCode><Quantity>${qty}</Quantity></Order>`;
+    try {
+      const res  = await fetch(`${BASE_ORDER}/place_order`, { method: 'POST', headers: {'Content-Type':'application/xml'}, body: xml });
+      const text = await res.text();
+      const doc  = parseXML(text);
+      if (getText(doc, 'Status') === 'Success') {
+        showToast(`✓ Order confirmed! TXN: ${getText(doc, 'TransactionID')}`, 'success');
+        await loadInventory();
+        await loadHistory();
+      } else {
+        showToast(`✗ ${getText(doc, 'Message') || 'Order failed'}`, 'error');
+      }
+    } catch (e) { showToast('⚠ Could not reach Order Service', 'error'); }
+    finally { btn.disabled = false; btn.innerHTML = 'Complete Order'; }
+  }
+
+  // ── Order History ───────────────────────────────────────────────
+  async function loadHistory() {
+    try {
+      const res    = await fetch(`${BASE_ORDER}/order_history`);
+      const text   = await res.text();
+      const doc    = parseXML(text);
+      const orders = Array.from(doc.querySelectorAll('Order')).reverse();
+
+      const list = document.getElementById('history-list');
+      if (!orders.length) {
+        list.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📭</div><p>No transactions yet</p></div>`;
+        return;
+      }
+
+      list.innerHTML = '';
+      orders.forEach(o => {
+        const code     = getText(o, 'ProductCode');
+        const product  = getText(o, 'Product');
+        const qty      = parseInt(getText(o, 'Quantity'));
+        const total    = parseFloat(getText(o, 'TotalAmount'));
+        const txn      = getText(o, 'TransactionID');
+        const category = getText(o, 'Category');
+        const status   = getText(o, 'Status') || 'Completed';
+        const ts       = getText(o, 'Timestamp');
+
+        const statusClass = status === 'Completed' ? 'status-completed' : status === 'Cancelled' ? 'status-cancelled' : 'status-pending';
+
+        const item = document.createElement('div');
+        item.className = 'timeline-item';
+        item.innerHTML = `
+          <div class="timeline-icon">${ICONS[category] || '📦'}</div>
+          <div class="timeline-content">
+            <h4>${product}</h4>
+            <p>${qty} units • ${txn}</p>
+            <p style="margin-top:4px; font-size:0.72rem;">${ts}</p>
+            <div class="order-actions">
+              <button class="btn-update-order" onclick="openUpdateOrder('${txn}', '${status}')">🔄 Update</button>
+              <button class="btn-delete-order" onclick="openDeleteOrder('${txn}')">🗑️ Delete</button>
+            </div>
+          </div>
+          <div class="timeline-amount">
+            <div class="amount">$${total.toFixed(2)}</div>
+            <div class="txn ${statusClass}">${status}</div>
+          </div>
+        `;
+        list.appendChild(item);
+      });
+    } catch (e) { /* silent fail */ }
+  }
+
+  // ── Update Order ─────────────────────────────────────────────────
+  function openUpdateOrder(txn, currentStatus) {
+    document.getElementById('upd-order-txn').value = txn;
+    document.getElementById('upd-order-status').value = currentStatus;
+    openModal('modal-update-order');
+  }
+
+  async function confirmUpdateOrder() {
+    const txn    = document.getElementById('upd-order-txn').value;
+    const status = document.getElementById('upd-order-status').value;
+    const xml    = `<Order><TransactionID>${txn}</TransactionID><Status>${status}</Status></Order>`;
+    try {
+      const res  = await fetch(`${BASE_ORDER}/update_order`, { method: 'POST', headers: {'Content-Type':'application/xml'}, body: xml });
+      const text = await res.text();
+      const doc  = parseXML(text);
+      if (getText(doc, 'Status') === 'Success') {
+        showToast(`✓ Order updated to "${status}"`, 'success');
+        closeModal('modal-update-order');
+        await loadHistory();
+      } else {
+        showToast(`✗ ${getText(doc, 'Message')}`, 'error');
+      }
+    } catch (e) { showToast('⚠ Could not reach Order Service', 'error'); }
+  }
+
+  // ── Delete Order ─────────────────────────────────────────────────
+  function openDeleteOrder(txn) {
+    document.getElementById('del-order-txn').value = txn;
+    document.getElementById('del-order-txn-label').textContent = txn;
+    openModal('modal-del-order');
+  }
+
+  async function confirmDeleteOrder() {
+    const txn = document.getElementById('del-order-txn').value;
+    const xml = `<Order><TransactionID>${txn}</TransactionID></Order>`;
+    try {
+      const res  = await fetch(`${BASE_ORDER}/delete_order`, { method: 'POST', headers: {'Content-Type':'application/xml'}, body: xml });
+      const text = await res.text();
+      const doc  = parseXML(text);
+      if (getText(doc, 'Status') === 'Success') {
+        showToast(`✓ Order ${txn} deleted`, 'success');
+        closeModal('modal-del-order');
+        await loadHistory();
+      } else {
+        showToast(`✗ ${getText(doc, 'Message')}`, 'error');
+      }
+    } catch (e) { showToast('⚠ Could not reach Order Service', 'error'); }
+  }
+
+  // ── Init ────────────────────────────────────────────────────────
+  (async () => {
+    await loadInventory();
+    await loadHistory();
+    setInterval(loadInventory, 30000);
+  })();
+</script>
+</body>
+</html>
