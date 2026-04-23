@@ -536,9 +536,10 @@
         await loadInventory();
         await loadHistory();
       } else {
-        showToast(`✗ ${getText(doc, 'Message') || 'Order failed'}`, 'error');
+        console.log("FULL RESPONSE:", text); // debug
+        showToast(`✗ ${text}`, 'error');
       }
-    } catch (e) { showToast('⚠ Could not reach Order Service', 'error'); }
+    } catch (e) { showToast('⚠ ' + e.message, 'error'); }
     finally { btn.disabled = false; btn.innerHTML = 'Complete Order'; }
   }
 
