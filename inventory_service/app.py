@@ -12,11 +12,11 @@ import mysql.connector
 import os
 
 conn = mysql.connector.connect(
-    host=os.environ.get("DB_HOST"),
+    host=os.environ.get("gateway01.ap-southeast-1.prod.alicloud.tidbcloud.com"),
     port=4000,
-    user=os.environ.get("DB_USER"),
-    password=os.environ.get("DB_PASSWORD"),
-    database=os.environ.get("DB_NAME"),
+    user=os.environ.get("45dhqdYGrnFxjYF.root"),
+    password=os.environ.get("mUrsVv2UppsEdhR6"),
+    database=os.environ.get("techvault"),
     ssl_disabled=False
 )
 engine = create_engine(DATABASE_URL)
@@ -178,5 +178,5 @@ def delete_item():
 
 import os
 
-port = int(os.environ.get("PORT", 5000))
+port = int(os.environ.get("4000", 5000))
 app.run(host="0.0.0.0", port=port)
