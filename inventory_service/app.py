@@ -11,13 +11,14 @@ CORS(app)
 import mysql.connector
 import os
 
-conn = mysql.connector.connect(
-    host=os.environ.get("DB_HOST"),
-    port=4000,
-    user=os.environ.get("DB_USER"),
-    password=os.environ.get("DB_PASSWORD"),
-    database=os.environ.get("DB_NAME")
-)
+DB_HOST = os.environ.get("DB_HOST")
+DB_USER = os.environ.get("DB_USER")
+DB_PASSWORD = os.environ.get("DB_PASSWORD")
+DB_NAME = os.environ.get("DB_NAME")
+
+DATABASE_URL = f"mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:4000/{DB_NAME}"
+
+from sqlalchemy import create_engine
 engine = create_engine(DATABASE_URL)
 Base = declarative_base()
 
