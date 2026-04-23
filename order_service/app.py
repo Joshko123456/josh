@@ -39,9 +39,8 @@ class Order(Base):
 Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 
-INVENTORY_URL = 'https://inventory-service-4i25.onrender.com'
-PAYMENT_URL   = 'https://payment-service-u4ok.onrender.com'
-
+INVENTORY_URL = 'https://inventory-service-4i25.onrender.com/update_inventory'
+PAYMENT_URL = 'https://payment-service-u4ok.onrender.com/process_payment'
 
 # ── Routes ───────────────────────────────────────────────────────────────────
 
