@@ -352,8 +352,8 @@
 <script>
   const ICONS = { CASE: '📱', CHARGER: '🔌', CABLE: '🔗', EARBUDS: '🎧', GLASS: '🛡️', POWER: '🔋', HOLDER: '📲', ADAPTER: '🔌' };
   let inventoryData = {};
-  const BASE_ORDER = 'http://127.0.0.1:5000';
-  const BASE_INV   = 'http://127.0.0.1:5001';
+  const BASE_ORDER = 'https://order-service-aott.onrender.com';
+  const BASE_INV   = 'https://inventory-service-4i25.onrender.com';
 
   // ── Utilities ──────────────────────────────────────────────────
   function parseXML(text) { return new DOMParser().parseFromString(text, 'application/xml'); }
