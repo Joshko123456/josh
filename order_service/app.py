@@ -14,12 +14,11 @@ import mysql.connector
 import os
 
 conn = mysql.connector.connect(
-    host=os.environ.get("gateway01.ap-southeast-1.prod.alicloud.tidbcloud.com"),
+    host=os.environ.get("DB_HOST"),
     port=4000,
-    user=os.environ.get("45dhqdYGrnFxjYF.root"),
-    password=os.environ.get("mUrsVv2UppsEdhR6"),
-    database=os.environ.get("techvault"),
-    ssl_disabled=False
+    user=os.environ.get("DB_USER"),
+    password=os.environ.get("DB_PASSWORD"),
+    database=os.environ.get("DB_NAME")
 )
 engine = create_engine(DATABASE_URL)
 Base = declarative_base()
