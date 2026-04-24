@@ -642,11 +642,23 @@
   }
 
   // ── Init ────────────────────────────────────────────────────────
-  (async () => {
+
+async function wakeUpServices() {
+  try {
+    await Promise.all([
+      fetch(`${BASE_INV}/inventory`),
+      fetch(`${BASE_ORDER}/order_history`)
+    ]);
+  } catch(e) {}
+}
+
+// In your init block at the bottom, add it:
+(async () => {
+    await wakeUpServices();   // ← ADD THIS LINE
     await loadInventory();
     await loadHistory();
     setInterval(loadInventory, 30000);
-  })();
+})();
 </script>
 </body>
 </html>
