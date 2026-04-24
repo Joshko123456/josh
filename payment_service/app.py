@@ -29,6 +29,10 @@ def process_payment():
 
     return Response(ET.tostring(response_el, encoding='unicode'), mimetype='application/xml')
 
+@app.route('/ping', methods=['GET'])
+def ping():
+    return Response('<status>ok</status>', mimetype='application/xml')
+
 import os
 
 if __name__ == "__main__":

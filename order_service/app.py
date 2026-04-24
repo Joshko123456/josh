@@ -50,9 +50,12 @@ def place_order():
     product_code = root.find('ProductCode').text
     quantity     = int(root.find('Quantity').text)
 
+    # was: inv_resp = requests.post(INVENTORY_URL, data=request.data, ...)
+    inv_resp = post_with_retry(INVENTORY_URL, data=request.data)
+
     # 1. Reserve inventory
-    inv_resp = requests.post(INVENTORY_URL, data=request.data,
-                             headers={'Content-Type': 'application/xml'})
+    #inv_resp = requests.post(INVENTORY_URL, data=request.data,
+    #                         headers={'Content-Type': 'application/xml'})
     inv_root = ET.fromstring(inv_resp.content)
 
     if inv_root.find('Status').text != 'Success':
@@ -69,8 +72,8 @@ def place_order():
     ET.SubElement(pay_xml, 'Product').text  = product
     ET.SubElement(pay_xml, 'Quantity').text = str(quantity)
 
-    pay_resp = requests.post(PAYMENT_URL, data=ET.tostring(pay_xml),
-                             headers={'Content-Type': 'application/xml'})
+    # was: pay_resp = requests.post(PAYMENT_URL, data=ET.tostring(pay_xml), ...)
+    pay_resp = post_with_retry(PAYMENT_URL, data=ET.tostring(pay_xml))
     pay_root = ET.fromstring(pay_resp.content)
 
     if pay_root.find('Status').text != 'Success':
@@ -176,6 +179,20 @@ def delete_order():
 
     return Response(ET.tostring(response_el, encoding='unicode'), mimetype='application/xml')
 
+import time
+
+def post_with_retry(url, data, retries=3, timeout=15):
+    for attempt in range(retries):
+        try:
+            resp = requests.post(url, data=data,
+                                 headers={'Content-Type': 'application/xml'},
+                                 timeout=timeout)
+            return resp
+        except requests.exceptions.Timeout:
+            if attempt < retries - 1:
+                time.sleep(3)
+            else:
+                raise
 
 import os
 

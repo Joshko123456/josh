@@ -641,6 +641,8 @@
     } catch (e) { showToast('⚠ Could not reach Order Service', 'error'); }
   }
 
+  fetch('https://payment-service-u4ok.onrender.com/ping').catch(()=>{});
+
   // ── Init ────────────────────────────────────────────────────────
 
 async function wakeUpServices() {
